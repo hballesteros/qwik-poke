@@ -1,5 +1,5 @@
 /* eslint-disable qwik/jsx-img */
-import { component$, useSignal, useTask$ } from "@builder.io/qwik";
+import { component$, useComputed$, useSignal, useTask$ } from "@builder.io/qwik";
 
 interface Props {
   id: number | string;
@@ -21,6 +21,10 @@ export const PokemonImage = component$(( {
     track(() => id );
     imageLoaded.value = false
   });
+
+  const imageUrl = useComputed$(() => {
+      return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${ backImage ? 'back/' : ''}${ id }.png`
+  })
   
   return (
     <div 
@@ -31,7 +35,7 @@ export const PokemonImage = component$(( {
       
       <img
         style={{ width: `${size}px` }}
-        src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${ backImage ? 'back/' : ''}${ id }.png`} 
+        src={ imageUrl.value } 
         alt="Pokemon Sprite"
         onLoad$={ () => imageLoaded.value = true }
         class={[{ 
