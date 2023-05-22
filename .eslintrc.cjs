@@ -37,5 +37,6 @@ module.exports = {
     'no-console': 'off',
     '@typescript-eslint/no-unused-vars': ['error'],
     '@typescript-eslint/consistent-type-imports': 'warn',
+    'eslint-disable-next-line qwik/jsx-img': 'off'
   },
 };
