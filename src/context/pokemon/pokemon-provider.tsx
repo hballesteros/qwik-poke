@@ -11,7 +11,6 @@ export const PokemonProvider = component$(() => {
         isPokemonVisible: true,
         showBackImage: false,
     });
-
     
     const pokemomList = useStore<PokemonListState>({
         currentPage: 1,
