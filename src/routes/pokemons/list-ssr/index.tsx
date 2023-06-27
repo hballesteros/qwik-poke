@@ -1,8 +1,9 @@
-import { $, component$, useComputed$, useSignal, useStore } from '@builder.io/qwik';
+import { $, component$, useComputed$, useSignal, useStore, useVisibleTask$ } from '@builder.io/qwik';
 import { type DocumentHead, Link, routeLoader$, useLocation } from '@builder.io/qwik-city';
 
 import { PokemonImage } from '~/components/pokemons/pokemon-image';
 import { Modal } from '~/components/shared';
+import { getFunFactAboutPokemon } from '~/helpers/get-chat-gpt-response';
 import { getSmallPokemons } from '~/helpers/get-small-pokemons';
 import type { SmallPokemon } from '~/interfaces';
 
@@ -33,6 +34,8 @@ export default component$(() => {
     name: ''
   });
 
+  const chatGptPokemonFact = useSignal('');
+
   // Modal functions
   const showModal = $(( id: string, name: string ) => {
     modalPokemon.id = id;
@@ -43,6 +46,18 @@ export default component$(() => {
   const closeModal = $(() => {
     modalVisible.value = false;
   });
+
+  // TODO: probar async
+  useVisibleTask$(({ track }) => {
+    track(() => modalPokemon.name );
+
+    chatGptPokemonFact.value = '';
+
+    if ( modalPokemon.name.length > 0 ) {
+      getFunFactAboutPokemon( modalPokemon.name )
+        .then( resp => chatGptPokemonFact.value = resp );
+    }
+  })
 
 
   const currentOffset = useComputed$<number>(() => {
@@ -92,7 +107,13 @@ export default component$(() => {
         <div q:slot='title'>{ modalPokemon.name }</div>
         <div q:slot='content' class="flex flex-col justify-center items-center">
           <PokemonImage id={ modalPokemon.id } />
-          <span>Preguntandole a ChatGPT</span>
+          <span>
+            { 
+              chatGptPokemonFact.value === ''
+              ? 'Preguntando a ChatGPT'
+              :  chatGptPokemonFact
+            }
+          </span>
         </div>
       </Modal> 
 
