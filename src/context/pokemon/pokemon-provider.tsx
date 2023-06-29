@@ -13,7 +13,7 @@ export const PokemonProvider = component$(() => {
     });
     
     const pokemomList = useStore<PokemonListState>({
-        currentPage: 1,
+        currentPage: 0,
         isLoading: false,
         pokemons: [],
     });  
